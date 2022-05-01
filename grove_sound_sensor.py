@@ -141,6 +141,7 @@ while True:
                 num_high = 0
             averaged_data.append(window_averaged)
             print("sensor_value = %d" %window_averaged)
+            print(entered_code)
             
         time.sleep(.01)
 
