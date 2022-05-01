@@ -70,7 +70,7 @@ grovepi.pinMode(buzzer,"OUTPUT")
 #    print(message.sid)
 
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-	message = client.messages.create(
+message = client.messages.create(
 		to=TWILIO_PHONE_RECIPIENT,
 		from_=TWILIO_PHONE_SENDER,
 		body='Knocking sequence failed! Beware of potential intruders.')
