@@ -60,6 +60,11 @@ grovepi.pinMode(sound_sensor,"INPUT")
 grovepi.pinMode(button,"INPUT")
 grovepi.pinMode(buzzer,"OUTPUT")
 
+WINDOW_SIZE = 5
+raw_data = []
+averaged_data = []
+num_points = 0
+
 #def send_text_alert(alert_str):
 #    """Sends an SMS text alert."""
 #    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -88,9 +93,16 @@ while True:
 
         # Read the sound level
         sensor_value = grovepi.analogRead(sound_sensor)
+        raw_data.append(sensor_value)
+        num_points = num_points + 1
+
+        if num_points >= WINDOW_SIZE:
+            window = raw_data[num_points - WINDOW_SIZE : num_points]
+            window_averaged = round(sum(window) / WINDOW_SIZE)
+            averaged_data.append(window_averaged)
 
         print("sensor_value = %d" %sensor_value)
-        time.sleep(.5)
+        time.sleep(.01)
 
     except IOError:
         print ("Error")
