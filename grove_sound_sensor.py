@@ -133,7 +133,7 @@ while True:
                     print("LONG BUTTON")
                     if(expected_code[code_index] == 1):
                         code_index = code_index + 1
-                        entered_code(1)
+                        entered_code.append(1)
                     else:
                         code_index = 0
                         entered_code = []
