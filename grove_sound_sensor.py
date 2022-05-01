@@ -61,11 +61,14 @@ grovepi.pinMode(button,"INPUT")
 grovepi.pinMode(buzzer,"OUTPUT")
 
 WINDOW_SIZE = 15
+THRESHOLD = 200
+LONG_LENGTH = 60
+SHORT_LENGTH = 20
 raw_data = []
 averaged_data = []
 num_points = 0
 
-def send_text_alert(alert_str):
+def send_text_alert():
     """Sends an SMS text alert."""
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     message = client.messages.create(
@@ -102,6 +105,13 @@ while True:
             window_averaged = round(sum(window) / WINDOW_SIZE)
             averaged_data.append(window_averaged)
             print("sensor_value = %d" %window_averaged)
+
+        recent = averaged_data[num_points - WINDOW_SIZE : num_points - WINDOW_SIZE + LONG_LENGTH]
+        if all(x > THRESHOLD for x in recent):
+            print("LONG BUTTON")
+            send_text_alert()
+            return
+
         time.sleep(.01)
 
     except IOError:
