@@ -61,7 +61,7 @@ grovepi.pinMode(button,"INPUT")
 grovepi.pinMode(buzzer,"OUTPUT")
 
 WINDOW_SIZE = 15
-THRESHOLD = 100
+THRESHOLD = 150
 LONG_LENGTH = 60
 SHORT_LENGTH = 20
 num_high = 0;
