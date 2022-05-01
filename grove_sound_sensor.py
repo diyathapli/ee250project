@@ -69,13 +69,18 @@ raw_data = []
 averaged_data = []
 num_points = 0
 
-def send_text_alert():
+# Values stored in array: 0 - Dot | 1 - Dash
+# Morse Code: USC (U: Dot, Dot, Dash | S: Dot, Dot, Dot | C: Dash, Dot, Dash, Dot)
+expected_code = [0, 0, 1, 0, 0, 0, 1, 0, 1, 0]
+code_index = 0
+
+def send_text_alert(alert_str):
     """Sends an SMS text alert."""
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     message = client.messages.create(
         to=TWILIO_PHONE_RECIPIENT,
         from_=TWILIO_PHONE_SENDER,
-        body='Knocking sequence failed! Beware of potential intruders.')
+        body=alert_str)
     print(message.sid)
 '''
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -96,6 +101,12 @@ while True:
         else:
             grovepi.digitalWrite(buzzer, 0)
 
+
+        # Code Entered Condition
+        if code_index == 10:
+            code_index = 0
+            send_text_alert('Code Entered! Welcome In!')
+
         # Read the sound level
         sensor_value = grovepi.analogRead(sound_sensor)
         raw_data.append(sensor_value)
@@ -107,15 +118,24 @@ while True:
             if window_averaged > THRESHOLD:
                 num_high = num_high + 1
             else:
+                if num_high < LONG_LENGTH and num_high > SHORT_LENGTH:
+                    print("Short BUTTON")
+                    if(expected_code[code_index] == 0):
+                        code_index = code_index + 1
+                    else:
+                        code_index = 0
+                        send_text_alert('Knocking sequence failed! Beware of potential intruders.')
+                if num_high > LONG_LENGTH:
+                    print("LONG BUTTON")
+                    if(expected_code[code_index] == 1):
+                        code_index = code_index + 1
+                    else:
+                        code_index = 1
+                        send_text_alert('Knocking sequence failed! Beware of potential intruders.')
                 num_high = 0
             averaged_data.append(window_averaged)
             print("sensor_value = %d" %window_averaged)
-
-        if num_high > LONG_LENGTH:
-            num_high = 0
-            print("LONG BUTTON")
-            send_text_alert()
-
+            
         time.sleep(.01)
 
     except IOError:
