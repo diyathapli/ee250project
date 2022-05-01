@@ -37,8 +37,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
+import os
 import time
 import grovepi
+from twilio.rest import Client
+
+
+#Send an SMS message to the client's phone number through the number registered with twilio
+TWILIO_ACCOUNT_SID = 'AC1ae904bb7ab7a6b87f6587b712b45657' # replace with your Account SID
+TWILIO_AUTH_TOKEN = 'acdc68d0a79a549f590b1d183a22188d' # replace with your Auth Token
+TWILIO_PHONE_SENDER = '+17853845784' # replace with the phone number you registered in twilio
+TWILIO_PHONE_RECIPIENT = '+17074943499' # replace with your phone number
 
 # Connect the Grove Sound Sensor to analog port A0
 # SIG,NC,VCC,GND
@@ -51,12 +60,29 @@ grovepi.pinMode(sound_sensor,"INPUT")
 grovepi.pinMode(button,"INPUT")
 grovepi.pinMode(buzzer,"OUTPUT")
 
+#def send_text_alert(alert_str):
+#    """Sends an SMS text alert."""
+#    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+#    message = client.messages.create(
+#        to=TWILIO_PHONE_RECIPIENT,
+#        from_=TWILIO_PHONE_SENDER,
+#        body='Knocking sequence failed! Beware of potential intruders.')
+#    print(message.sid)
+
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+	    message = client.messages.create(
+		to=TWILIO_PHONE_RECIPIENT,
+		from_=TWILIO_PHONE_SENDER,
+		body='Knocking sequence failed! Beware of potential intruders.')
+print(message.sid)
+	    
 while True:
     try:
         button_val = grovepi.digitalRead(button)
 
         if button_val:
             grovepi.digitalWrite(buzzer, 1)
+
         else:
             grovepi.digitalWrite(buzzer, 0)
 
@@ -64,6 +90,8 @@ while True:
         sensor_value = grovepi.analogRead(sound_sensor)
 
         print("sensor_value = %d" %sensor_value)
+        time.sleep(.5)
 
     except IOError:
         print ("Error")
+        

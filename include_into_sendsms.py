@@ -13,3 +13,5 @@ def send_text_alert(alert_str):
         from_=TWILIO_PHONE_SENDER,
         body="Knocking sequence failed! Beware of potential intruders.")
     print(message.sid)
+    
+    
