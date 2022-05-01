@@ -60,12 +60,11 @@ grovepi.pinMode(sound_sensor,"INPUT")
 grovepi.pinMode(button,"INPUT")
 grovepi.pinMode(buzzer,"OUTPUT")
 
-WINDOW_SIZE = 5
+WINDOW_SIZE = 15
 raw_data = []
 averaged_data = []
 num_points = 0
 
-'''
 def send_text_alert(alert_str):
     """Sends an SMS text alert."""
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -81,7 +80,8 @@ message = client.messages.create(
 		from_=TWILIO_PHONE_SENDER,
 		body='Knocking sequence failed! Beware of potential intruders.')
 print(message.sid)
-   
+'''
+
 while True:
     try:
         button_val = grovepi.digitalRead(button)
