@@ -53,12 +53,12 @@ grovepi.pinMode(buzzer,"OUTPUT")
 
 while True:
     try:
-        button_val = digitalRead(button)
+        button_val = grovepi.digitalRead(button)
 
         if button_val:
-            digitalWrite(buzzer, 1)
+            grovepi.digitalWrite(buzzer, 1)
         else:
-            digitalWrite(buzzer, 0)
+            grovepi.digitalWrite(buzzer, 0)
 
         # Read the sound level
         sensor_value = grovepi.analogRead(sound_sensor)
