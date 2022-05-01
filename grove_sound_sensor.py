@@ -72,6 +72,7 @@ num_points = 0
 # Values stored in array: 0 - Dot | 1 - Dash
 # Morse Code: USC (U: Dot, Dot, Dash | S: Dot, Dot, Dot | C: Dash, Dot, Dash, Dot)
 expected_code = [0, 0, 1, 0, 0, 0, 1, 0, 1, 0]
+entered_code = []
 code_index = 0
 
 def send_text_alert(alert_str):
@@ -105,6 +106,7 @@ while True:
         # Code Entered Condition
         if code_index == 10:
             code_index = 0
+            entered_code = []
             send_text_alert('Code Entered! Welcome In!')
 
         # Read the sound level
@@ -122,15 +124,19 @@ while True:
                     print("Short BUTTON")
                     if(expected_code[code_index] == 0):
                         code_index = code_index + 1
+                        entered_code.append(0)
                     else:
                         code_index = 0
+                        entered_code = []
                         send_text_alert('Knocking sequence failed! Beware of potential intruders.')
-                if num_high > LONG_LENGTH:
+                elif num_high > LONG_LENGTH:
                     print("LONG BUTTON")
                     if(expected_code[code_index] == 1):
                         code_index = code_index + 1
+                        entered_code(1)
                     else:
-                        code_index = 1
+                        code_index = 0
+                        entered_code = []
                         send_text_alert('Knocking sequence failed! Beware of potential intruders.')
                 num_high = 0
             averaged_data.append(window_averaged)
