@@ -1,7 +1,7 @@
 from twilio.rest import Client
 
 TWILIO_ACCOUNT_SID = 'AC1ae904bb7ab7a6b87f6587b712b45657' # replace with your Account SID
-TWILIO_AUTH_TOKEN = 'acdc68d0a79a549f590b1d183a22188d' # replace with your Auth Token
+TWILIO_AUTH_TOKEN = 'cd080981ea88a3291fdbcf2cf762c511' # replace with your Auth Token
 TWILIO_PHONE_SENDER = "7853845784" # replace with the phone number you registered in twilio
 TWILIO_PHONE_RECIPIENT = "7074943499" # replace with your phone number
 
