@@ -110,7 +110,7 @@ while True:
         if all(x > THRESHOLD for x in recent):
             print("LONG BUTTON")
             send_text_alert()
-            return
+            break
 
         time.sleep(.01)
 
