@@ -100,8 +100,7 @@ while True:
             window = raw_data[num_points - WINDOW_SIZE : num_points]
             window_averaged = round(sum(window) / WINDOW_SIZE)
             averaged_data.append(window_averaged)
-
-        print("sensor_value = %d" %sensor_value)
+            print("sensor_value = %d" %window_averaged)
         time.sleep(.01)
 
     except IOError:
