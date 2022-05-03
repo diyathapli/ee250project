@@ -40,6 +40,7 @@ THE SOFTWARE.
 import os
 import time
 import grovepi
+import paho.mqtt.client as mqtt
 from twilio.rest import Client
 
 
@@ -75,6 +76,33 @@ expected_code = [0, 0, 1, 0, 0, 0, 1, 0, 1, 0]
 entered_code = []
 code_index = 0
 
+def lcd_callback(client, userdata, message):
+    if(str(message.payload, "utf-8") == "w"):
+        #print("w")
+        try:
+            setText_norefresh("w")
+        except(IOError):
+            pass
+
+def custom_callback(client, userdata, message):
+    if (str(message.payload, "utf-8") == "LED_ON"):
+        grovepi.digitalWrite(LED_PIN, 1)
+        #print("ON")
+    else:
+        grovepi.digitalWrite(LED_PIN, 0)
+        #print("OFF")
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected to server (i.e., broker) with result code "+str(rc))
+
+    #subscribe to topics of interest here
+    client.subscribe("dthapli/led")
+    client.message_callback_add("dthapli/led", custom_callback)
+    client.message_callback_add("dthapli/lcd", lcd_callback)
+
+def on_message(client, userdata, msg):
+    print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
+
 def send_text_alert(alert_str):
     """Sends an SMS text alert."""
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -92,6 +120,12 @@ message = client.messages.create(
 print(message.sid)
 '''
 
+client = mqtt.Client()
+    client.on_message = on_message
+    client.on_connect = on_connect
+    client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
+    client.loop_start()
+    
 while True:
     try:
         button_val = grovepi.digitalRead(button)
