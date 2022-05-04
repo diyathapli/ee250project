@@ -43,6 +43,7 @@ import grovepi
 import paho.mqtt.client as mqtt
 from twilio.rest import Client
 
+LED_PIN = 3
 
 #Send an SMS message to the client's phone number through the number registered with twilio
 TWILIO_ACCOUNT_SID = 'AC1ae904bb7ab7a6b87f6587b712b45657' # replace with your Account SID
@@ -62,7 +63,7 @@ grovepi.pinMode(button,"INPUT")
 grovepi.pinMode(buzzer,"OUTPUT")
 
 WINDOW_SIZE = 15
-THRESHOLD = 150
+THRESHOLD = 175
 LONG_LENGTH = 60
 SHORT_LENGTH = 20
 num_high = 0;
@@ -76,29 +77,30 @@ expected_code = [0, 0, 1, 0, 0, 0, 1, 0, 1, 0]
 entered_code = []
 code_index = 0
 
-def lcd_callback(client, userdata, message):
-    if(str(message.payload, "utf-8") == "w"):
-        #print("w")
+'''
+def success_callback(client, userdata, message):
+    if(str(message.payload, "utf-8") == "T"):
+        #Then true
         try:
             setText_norefresh("w")
         except(IOError):
             pass
-
-def custom_callback(client, userdata, message):
-    if (str(message.payload, "utf-8") == "LED_ON"):
+'''
+def led_callback(client, userdata, message):
+    if (str(message.payload, "utf-8") == "T"):
         grovepi.digitalWrite(LED_PIN, 1)
-        #print("ON")
+        #print("Incorrect")
     else:
         grovepi.digitalWrite(LED_PIN, 0)
-        #print("OFF")
+        #print("Correct")
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
     #subscribe to topics of interest here
-    client.subscribe("dthapli/led")
-    client.message_callback_add("dthapli/led", custom_callback)
-    client.message_callback_add("dthapli/lcd", lcd_callback)
+    client.subscribe("pkowshik/led")
+    #client.message_callback_add("dthapli/led", success_callback)
+    client.message_callback_add("pkowshik/led", led_callback)
 
 def on_message(client, userdata, msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
@@ -125,7 +127,7 @@ client = mqtt.Client()
     client.on_connect = on_connect
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
-    
+
 while True:
     try:
         button_val = grovepi.digitalRead(button)
