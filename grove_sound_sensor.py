@@ -45,13 +45,6 @@ from twilio.rest import Client
 import os
 import sys
 import tkinter as tk
-#import Tkinter
-
-root = tk.Tk()
-root.totle("My GUI")
-label = tk.Label(root, text="Hello,World")
-label.pack()
-root.mainloop()
 
 '''
 if os.environ.get('DISPLAY', '') == '':
@@ -77,8 +70,8 @@ grovepi.pinMode(buzzer,"OUTPUT")
 
 WINDOW_SIZE = 15
 THRESHOLD = 175
-LONG_LENGTH = 60
-SHORT_LENGTH = 20
+LONG_LENGTH = 45
+SHORT_LENGTH = 15
 num_high = 0;
 raw_data = []
 averaged_data = []
@@ -189,8 +182,8 @@ while True:
                         send_text_alert('Knocking sequence failed! Beware of potential intruders.')
                 num_high = 0
             averaged_data.append(window_averaged)
-            print("sensor_value = %d" %window_averaged)
-            print(entered_code)
+            #print("sensor_value = %d" %window_averaged)
+            #print(entered_code)
 
             '''
             root = Tk()
