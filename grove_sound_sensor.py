@@ -42,9 +42,22 @@ import time
 import grovepi
 import paho.mqtt.client as mqtt
 from twilio.rest import Client
+import os
+import sys
+import tkinter as tk
+#import Tkinter
 
-LED_PIN = 3
+root = tk.Tk()
+root.totle("My GUI")
+label = tk.Label(root, text="Hello,World")
+label.pack()
+root.mainloop()
 
+'''
+if os.environ.get('DISPLAY', '') == '':
+    print('no display found. Using :0.0')
+    os.environ.__setitem__('DISPLAY', ':0.0')
+'''
 #Send an SMS message to the client's phone number through the number registered with twilio
 TWILIO_ACCOUNT_SID = 'AC1ae904bb7ab7a6b87f6587b712b45657' # replace with your Account SID
 TWILIO_AUTH_TOKEN = 'cd080981ea88a3291fdbcf2cf762c511' # replace with your Auth Token
@@ -178,7 +191,16 @@ while True:
             averaged_data.append(window_averaged)
             print("sensor_value = %d" %window_averaged)
             print(entered_code)
-            
+
+            '''
+            root = Tk()
+            root.title("Hello")
+            root.geometry("750x280")
+            canvas = Canvas(root, width=1000, height=750, bg="white")
+            canvas.create_text(300, 50, text="HELLO", fill="black", font=('Helvetica 15 bold'))
+            canvas.pack()
+            #root.mainloop()
+            '''
         time.sleep(.01)
 
     except IOError:
