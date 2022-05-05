@@ -6,6 +6,7 @@ def on_connect(client, userdata, flags, rc):
     # subscribe, which need to put into on_connect
     # if reconnect after losing the connection with the broker, it will continue to subscribe to the raspberry/topic topic
     client.subscribe("raspberry/topic")
+    client.subscribe("pkowshik/msg")
 
 # the callback function, it will be triggered when receiving messages
 def on_message(client, userdata, msg):

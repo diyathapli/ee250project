@@ -44,13 +44,7 @@ import paho.mqtt.client as mqtt
 from twilio.rest import Client
 import os
 import sys
-import tkinter as tk
 
-'''
-if os.environ.get('DISPLAY', '') == '':
-    print('no display found. Using :0.0')
-    os.environ.__setitem__('DISPLAY', ':0.0')
-'''
 #Send an SMS message to the client's phone number through the number registered with twilio
 TWILIO_ACCOUNT_SID = 'AC1ae904bb7ab7a6b87f6587b712b45657' # replace with your Account SID
 TWILIO_AUTH_TOKEN = 'cd080981ea88a3291fdbcf2cf762c511' # replace with your Auth Token
@@ -103,11 +97,6 @@ def led_callback(client, userdata, message):
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
-    #subscribe to topics of interest here
-    client.subscribe("pkowshik/led")
-    #client.message_callback_add("dthapli/led", success_callback)
-    client.message_callback_add("pkowshik/led", led_callback)
-
 def on_message(client, userdata, msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
 
@@ -131,7 +120,7 @@ print(message.sid)
 client = mqtt.Client()
 client.on_message = on_message
 client.on_connect = on_connect
-client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
+client.connect("broker.emqx.io", 1883, 60) 
 client.loop_start()
 
 while True:
@@ -171,6 +160,7 @@ while True:
                         code_index = 0
                         entered_code = []
                         send_text_alert('Knocking sequence failed! Beware of potential intruders.')
+                        client.publish('pkowshik/msg', payload = "Code Failure!", qos=0, retain=False)
                 elif num_high > LONG_LENGTH:
                     print("LONG BUTTON")
                     if(expected_code[code_index] == 1):
@@ -180,20 +170,11 @@ while True:
                         code_index = 0
                         entered_code = []
                         send_text_alert('Knocking sequence failed! Beware of potential intruders.')
+                        client.publish('pkowshik/msg', payload = "Code Success! Welcome In~", qos=0, retain=False)
                 num_high = 0
             averaged_data.append(window_averaged)
             #print("sensor_value = %d" %window_averaged)
             #print(entered_code)
-
-            '''
-            root = Tk()
-            root.title("Hello")
-            root.geometry("750x280")
-            canvas = Canvas(root, width=1000, height=750, bg="white")
-            canvas.create_text(300, 50, text="HELLO", fill="black", font=('Helvetica 15 bold'))
-            canvas.pack()
-            #root.mainloop()
-            '''
         time.sleep(.01)
 
     except IOError:
